@@ -1,0 +1,8 @@
+.flexcontainer {
+   display: -webkit-flex;
+   display: flex;
+   -webkit-flex-direction: column;
+   flex-direction: column;
+   border: 2px solid black;
+   padding: 1%;
+}

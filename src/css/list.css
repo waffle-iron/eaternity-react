@@ -1,0 +1,23 @@
+.list {
+  margin-left: 1%;
+  padding: 1%;
+  width: 50%;
+  border: 2px solid black;
+}
+
+.listItem {
+    height: 50px;
+    text-align: center;
+    line-height: 50px;
+    width: 100%;
+}
+
+.listItem span {
+    padding-bottom: 14px;
+    border-bottom: 1px solid #ddd;
+    font-size: 14px;
+}
+
+.listItem:last-child span {
+    border-bottom: 0;
+}

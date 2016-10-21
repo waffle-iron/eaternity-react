@@ -1,0 +1,14 @@
+.flexcontainer {
+   display: -webkit-flex;
+   display: flex;
+   -webkit-flex-direction: row;
+   flex-direction: row;
+   justify-content: space-around;
+   align-items: center;
+   border: 2px solid black;
+   padding: 1%;
+}
+
+.image {
+  height: 80px;
+}
