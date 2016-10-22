@@ -5,7 +5,7 @@
 ## Usage
 
 ```bash
-git clone https://mcmunder/eaternity-react.git
+git clone https://github.com/mcmunder/eaternity-react.git
 cd eaternity-react
 ```
 Then,  __either__ with docker (make sure you have the [docker toolbox](https://www.docker.com/products/docker-toolbox) installed):
