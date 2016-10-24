@@ -1,14 +1,17 @@
 import React from 'react'
-import ReactList from 'react-list';
-import styles from '../css/list.css'
+import ReactList from 'react-list'
 import api from '../utils/github-api'
+import '../css/List.css'
 
 class List extends React.Component {
-  state = {
-    repos: []
+  constructor () {
+    super()
+    this.state = {
+      repos: []
+    }
   }
 
-  componentWillMount() {
+  componentWillMount () {
     api.getRepos()
       .then(jsonRes => {
         const repos = jsonRes.map(repo => {
@@ -17,33 +20,33 @@ class List extends React.Component {
             name: repo.name
           }
         })
-        this.setState({repos});
+        this.setState({repos})
       })
       .catch(err => console.error(err))
   }
 
-  renderItem(id, key) {
+  renderItem (id, key) {
     const repoId = this.state.repos[id].id
     const name = this.state.repos[id].name
     return (
-      <div className={styles.listItem} key={key}>
-        {id}: {name}
+      <div className='ListItem' key={key}>
+        {repoId}: {name}
       </div>
     )
   }
 
-  render() {
+  render () {
     return (
-      <div className={styles.list}>
+      <div className='List'>
         <div style={{overflow: 'auto', maxHeight: 400}}>
           <ReactList
-            itemRenderer={::this.renderItem}
+            itemRenderer={this.renderItem.bind(this)}
             length={this.state.repos.length}
             type='uniform'
           />
         </div>
       </div>
-    );
+    )
   }
 }
 

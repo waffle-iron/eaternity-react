@@ -1,19 +1,13 @@
-import React from 'react'
-
-import TopBar from './TopBar.jsx'
+import React, { Component } from 'react'
+import Header from './Header.jsx'
 import Body from './Body.jsx'
-import styles from '../css/app.css'
+import '../css/App.css'
 
-class App extends React.Component {
-  constructor (props) {
-    super(props)
-    this.state = {test: 'foo'}
-  }
-
+class App extends Component {
   render () {
     return (
-      <div className={styles.flexcontainer}>
-        <TopBar />
+      <div className='App'>
+        <Header />
         <Body />
       </div>
     )
