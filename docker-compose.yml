@@ -1,8 +1,0 @@
-version: '2'
-services:
-  docker:
-    build: .
-    volumes:
-     - .:/code
-    ports:
-    - "3000:3000"
