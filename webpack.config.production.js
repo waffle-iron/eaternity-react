@@ -25,6 +25,9 @@ const config = validate(merge(baseConfig, {
 
   module: {
     loaders: [
+      { test: /\.jpg(\?v=\d+\.\d+\.\d+)?$/, loader: 'file' },
+      { test: /\.png(\?v=\d+\.\d+\.\d+)?$/, loader: 'file' },
+      { test: /\.svg(\?v=\d+\.\d+\.\d+)?$/, loader: 'file' },
       // Extract all .global.css to style.css as is
       {
         test: /\.global\.css$/,
@@ -33,7 +36,6 @@ const config = validate(merge(baseConfig, {
           'css-loader'
         )
       },
-
       // Pipe other styles through css modules and append to style.css
       {
         test: /^((?!\.global).)*\.css$/,
@@ -42,11 +44,6 @@ const config = validate(merge(baseConfig, {
           'css-loader?modules&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]'
         )
       },
-
-      { test: /\.jpg(\?v=\d+\.\d+\.\d+)?$/, loader: 'file' },
-      { test: /\.png(\?v=\d+\.\d+\.\d+)?$/, loader: 'file' },
-      { test: /\.svg(\?v=\d+\.\d+\.\d+)?$/, loader: 'file' },
-
       { test: /\.woff(\?v=\d+\.\d+\.\d+)?$/, loader: 'url?limit=10000&mimetype=application/font-woff' },
       { test: /\.woff2(\?v=\d+\.\d+\.\d+)?$/, loader: 'url?limit=10000&mimetype=application/font-woff' },
       { test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/, loader: 'url?limit=10000&mimetype=application/octet-stream' },
