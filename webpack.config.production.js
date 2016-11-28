@@ -25,9 +25,6 @@ const config = validate(merge(baseConfig, {
 
   module: {
     loaders: [
-      { test: /\.jpg(\?v=\d+\.\d+\.\d+)?$/, loader: 'file' },
-      { test: /\.png(\?v=\d+\.\d+\.\d+)?$/, loader: 'file' },
-      { test: /\.svg(\?v=\d+\.\d+\.\d+)?$/, loader: 'file' },
       // Extract all .global.css to style.css as is
       {
         test: /\.global\.css$/,

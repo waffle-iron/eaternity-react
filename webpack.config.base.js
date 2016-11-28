@@ -17,9 +17,12 @@ export default validate({
     }, {
       test: /\.json$/,
       loader: 'json-loader'
+    },
+    {
+      test: /\.(?:ico|gif|png|jpg|jpeg|svg|webp)$/,
+      loader: 'url-loader'
     }]
   },
-
   output: {
     path: path.join(__dirname, 'app'),
     filename: 'bundle.js',
