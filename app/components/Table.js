@@ -1,37 +1,41 @@
-import React, { Component } from 'react';
+import React, { PropTypes } from 'react';
 import { Table } from 'reactable';
 import { Col, Container, Row } from 'reactstrap';
-import productApi from '../api/products';
+import ChooseDataDir from './ChooseDataDir';
 import styles from './Table.css';
 
-class EdbTable extends Component {
-  state = {
-    data: productApi.loadProducs()
-      .map(rawProduct => ({
-        Product: rawProduct.name,
-        Tags: rawProduct.tags,
-        'Co2-value': rawProduct['co2-value']
-      }))
-  }
+const EdbTable = (props) => {
+  const renderView = () => {
+    if (!props.products) {
+      return <ChooseDataDir />;
+    }
 
-  render() {
     return (
-      <div className={styles.table}>
-        <Container>
-          <Row>
-            <Col sm={{ size: '10', offset: 1 }}>
-              <Table
-                className="table"
-                data={this.state.data}
-                itemsPerPage={10}
-                pageButtonLimit={5}
-              />
-            </Col>
-          </Row>
-        </Container>
-      </div>
+      <Table
+        className="table"
+        data={props.products}
+        itemsPerPage={10}
+        pageButtonLimit={5}
+      />
     );
-  }
-}
+  };
+
+  return (
+    <div className={styles.table}>
+      <Container>
+        <Row>
+          <Col sm={{ size: '10', offset: 1 }}>
+            {renderView()}
+          </Col>
+        </Row>
+      </Container>
+    </div>
+  );
+};
+
+
+EdbTable.propTypes = {
+  products: PropTypes.arrayOf(PropTypes.object)
+};
 
 export default EdbTable;

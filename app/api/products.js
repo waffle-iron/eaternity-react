@@ -1,10 +1,10 @@
-// import PouchDB from 'pouchdb-browser';
-import rawProducData from '../../db/prods/producs.all.json';
+import jsonStore from 'electron-json-storage'
+import pify from 'pify'
+
+const storage = pify(jsonStore)
 
 const productApi = {
-  loadProducs: () => rawProducData
-};
+  getAllProducts: async () => await storage.get('products')
+}
 
-export default productApi;
-
-// var db = new PouchDB('mydb');
+export default productApi

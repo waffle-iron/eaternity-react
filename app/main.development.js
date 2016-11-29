@@ -1,4 +1,6 @@
-import { app, BrowserWindow, Menu, shell } from 'electron';
+import { app, dialog, BrowserWindow, ipcMain, Menu, shell } from 'electron';
+import pify from 'pify';
+import jsonStorage from 'electron-json-storage';
 import fs from 'fs';
 import path from 'path';
 import jsonfile from 'jsonfile';
@@ -7,7 +9,11 @@ let menu;
 let template;
 let mainWindow = null;
 
-const combineData = (dir = './db/prods/') => {
+// Create a persistent storage object similar to locaStorage. Pify promisifies
+// it to allow promise, await/async syntax
+const storage = pify(jsonStorage);
+
+const loadProducts = async (dir) => {
   const allFiles = fs.readdirSync(path.resolve(dir));
   const rawData = allFiles
     .filter(filename => (
@@ -17,10 +23,17 @@ const combineData = (dir = './db/prods/') => {
       jsonfile.readFileSync(path.join(dir, filename))
     ));
 
-  jsonfile.writeFileSync(path.join(dir, 'producs.all.json'), rawData);
+  await storage.set('products', rawData);
 };
 
-combineData();
+
+ipcMain.on('choose-data-dir', (event) => {
+  dialog.showOpenDialog({ properties: ['openDirectory'] }, (dataDir) => {
+    loadProducts(dataDir);
+    event.sender.send('data-dir-choosen', dataDir);
+  });
+});
+
 
 if (process.env.NODE_ENV === 'production') {
   const sourceMapSupport = require('source-map-support'); // eslint-disable-line
