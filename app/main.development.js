@@ -1,106 +1,103 @@
-import { app, dialog, BrowserWindow, ipcMain, Menu, shell } from 'electron';
-import pify from 'pify';
-import jsonStorage from 'electron-json-storage';
-import fs from 'fs';
-import path from 'path';
-import jsonfile from 'jsonfile';
+import { app, dialog, BrowserWindow, ipcMain, Menu, shell } from 'electron'
+import pify from 'pify'
+import jsonStorage from 'electron-json-storage'
+import fs from 'fs'
+import path from 'path'
+import jsonfile from 'jsonfile'
 
-let menu;
-let template;
-let mainWindow = null;
+let menu
+let template
+let mainWindow = null
 
 // Create a persistent storage object similar to locaStorage. Pify promisifies
 // it to allow promise, await/async syntax
-const storage = pify(jsonStorage);
+const storage = pify(jsonStorage)
 
 const loadProducts = async (dir) => {
-  const allFiles = fs.readdirSync(path.resolve(dir));
+  const allFiles = fs.readdirSync(path.resolve(dir))
   const rawData = allFiles
     .filter(filename => (
       path.extname(filename) === '.json'
     ))
     .map(filename => (
       jsonfile.readFileSync(path.join(dir, filename))
-    ));
+    ))
 
-  await storage.set('products', rawData);
-};
-
+  await storage.set('products', rawData)
+}
 
 ipcMain.on('choose-data-dir', (event) => {
   dialog.showOpenDialog({ properties: ['openDirectory'] }, (dataDir) => {
-    loadProducts(dataDir);
-    event.sender.send('data-dir-choosen', dataDir);
-  });
-});
-
+    loadProducts(dataDir)
+    event.sender.send('data-dir-choosen', dataDir)
+  })
+})
 
 if (process.env.NODE_ENV === 'production') {
   const sourceMapSupport = require('source-map-support'); // eslint-disable-line
-  sourceMapSupport.install();
+  sourceMapSupport.install()
 }
 
 if (process.env.NODE_ENV === 'development') {
-  require('electron-debug')(); // eslint-disable-line global-require
+  require('electron-debug')() // eslint-disable-line global-require
   const path = require('path'); // eslint-disable-line
   const p = path.join(__dirname, '..', 'app', 'node_modules'); // eslint-disable-line
   require('module').globalPaths.push(p); // eslint-disable-line
 }
 
 app.on('window-all-closed', () => {
-  if (process.platform !== 'darwin') app.quit();
-});
-
+  if (process.platform !== 'darwin') app.quit()
+})
 
 const installExtensions = async () => {
   if (process.env.NODE_ENV === 'development') {
-    const installer = require('electron-devtools-installer'); // eslint-disable-line global-require
+    const installer = require('electron-devtools-installer') // eslint-disable-line global-require
 
     const extensions = [
       'REACT_DEVELOPER_TOOLS',
       'REDUX_DEVTOOLS'
-    ];
-    const forceDownload = !!process.env.UPGRADE_EXTENSIONS;
+    ]
+    const forceDownload = !!process.env.UPGRADE_EXTENSIONS
     for (const name of extensions) { // eslint-disable-line
       try {
-        await installer.default(installer[name], forceDownload);
+        await installer.default(installer[name], forceDownload)
       } catch (e) {} // eslint-disable-line
     }
   }
-};
+}
 
 app.on('ready', async () => {
-  await installExtensions();
+  await installExtensions()
 
   mainWindow = new BrowserWindow({
     show: false,
     width: 1024,
     height: 728
-  });
+  })
 
-  mainWindow.loadURL(`file://${__dirname}/app.html`);
+  mainWindow.loadURL(`file://${__dirname}/app.html`)
 
   mainWindow.webContents.on('did-finish-load', () => {
-    mainWindow.show();
-    mainWindow.focus();
-  });
+    mainWindow.show()
+    mainWindow.focus()
+  })
 
   mainWindow.on('closed', () => {
-    mainWindow = null;
-  });
+    mainWindow = null
+  })
 
   if (process.env.NODE_ENV === 'development') {
-    mainWindow.openDevTools();
+    mainWindow.openDevTools()
     mainWindow.webContents.on('context-menu', (e, props) => {
-      const { x, y } = props;
+      const { x, y } = props
 
       Menu.buildFromTemplate([{
         label: 'Inspect element',
-        click() {
-          mainWindow.inspectElement(x, y);
+        click () {
+          mainWindow.inspectElement(x, y)
         }
-      }]).popup(mainWindow);
-    });
+      }]).popup(mainWindow)
+    })
   }
 
   if (process.platform === 'darwin') {
@@ -132,8 +129,8 @@ app.on('ready', async () => {
       }, {
         label: 'Quit',
         accelerator: 'Command+Q',
-        click() {
-          app.quit();
+        click () {
+          app.quit()
         }
       }]
     }, {
@@ -170,26 +167,26 @@ app.on('ready', async () => {
       submenu: (process.env.NODE_ENV === 'development') ? [{
         label: 'Reload',
         accelerator: 'Command+R',
-        click() {
-          mainWindow.webContents.reload();
+        click () {
+          mainWindow.webContents.reload()
         }
       }, {
         label: 'Toggle Full Screen',
         accelerator: 'Ctrl+Command+F',
-        click() {
-          mainWindow.setFullScreen(!mainWindow.isFullScreen());
+        click () {
+          mainWindow.setFullScreen(!mainWindow.isFullScreen())
         }
       }, {
         label: 'Toggle Developer Tools',
         accelerator: 'Alt+Command+I',
-        click() {
-          mainWindow.toggleDevTools();
+        click () {
+          mainWindow.toggleDevTools()
         }
       }] : [{
         label: 'Toggle Full Screen',
         accelerator: 'Ctrl+Command+F',
-        click() {
-          mainWindow.setFullScreen(!mainWindow.isFullScreen());
+        click () {
+          mainWindow.setFullScreen(!mainWindow.isFullScreen())
         }
       }]
     }, {
@@ -212,29 +209,29 @@ app.on('ready', async () => {
       label: 'Help',
       submenu: [{
         label: 'Learn More',
-        click() {
-          shell.openExternal('http://electron.atom.io');
+        click () {
+          shell.openExternal('http://electron.atom.io')
         }
       }, {
         label: 'Documentation',
-        click() {
-          shell.openExternal('https://github.com/atom/electron/tree/master/docs#readme');
+        click () {
+          shell.openExternal('https://github.com/atom/electron/tree/master/docs#readme')
         }
       }, {
         label: 'Community Discussions',
-        click() {
-          shell.openExternal('https://discuss.atom.io/c/electron');
+        click () {
+          shell.openExternal('https://discuss.atom.io/c/electron')
         }
       }, {
         label: 'Search Issues',
-        click() {
-          shell.openExternal('https://github.com/atom/electron/issues');
+        click () {
+          shell.openExternal('https://github.com/atom/electron/issues')
         }
       }]
-    }];
+    }]
 
-    menu = Menu.buildFromTemplate(template);
-    Menu.setApplicationMenu(menu);
+    menu = Menu.buildFromTemplate(template)
+    Menu.setApplicationMenu(menu)
   } else {
     template = [{
       label: '&File',
@@ -244,8 +241,8 @@ app.on('ready', async () => {
       }, {
         label: '&Close',
         accelerator: 'Ctrl+W',
-        click() {
-          mainWindow.close();
+        click () {
+          mainWindow.close()
         }
       }]
     }, {
@@ -253,53 +250,53 @@ app.on('ready', async () => {
       submenu: (process.env.NODE_ENV === 'development') ? [{
         label: '&Reload',
         accelerator: 'Ctrl+R',
-        click() {
-          mainWindow.webContents.reload();
+        click () {
+          mainWindow.webContents.reload()
         }
       }, {
         label: 'Toggle &Full Screen',
         accelerator: 'F11',
-        click() {
-          mainWindow.setFullScreen(!mainWindow.isFullScreen());
+        click () {
+          mainWindow.setFullScreen(!mainWindow.isFullScreen())
         }
       }, {
         label: 'Toggle &Developer Tools',
         accelerator: 'Alt+Ctrl+I',
-        click() {
-          mainWindow.toggleDevTools();
+        click () {
+          mainWindow.toggleDevTools()
         }
       }] : [{
         label: 'Toggle &Full Screen',
         accelerator: 'F11',
-        click() {
-          mainWindow.setFullScreen(!mainWindow.isFullScreen());
+        click () {
+          mainWindow.setFullScreen(!mainWindow.isFullScreen())
         }
       }]
     }, {
       label: 'Help',
       submenu: [{
         label: 'Learn More',
-        click() {
-          shell.openExternal('http://electron.atom.io');
+        click () {
+          shell.openExternal('http://electron.atom.io')
         }
       }, {
         label: 'Documentation',
-        click() {
-          shell.openExternal('https://github.com/atom/electron/tree/master/docs#readme');
+        click () {
+          shell.openExternal('https://github.com/atom/electron/tree/master/docs#readme')
         }
       }, {
         label: 'Community Discussions',
-        click() {
-          shell.openExternal('https://discuss.atom.io/c/electron');
+        click () {
+          shell.openExternal('https://discuss.atom.io/c/electron')
         }
       }, {
         label: 'Search Issues',
-        click() {
-          shell.openExternal('https://github.com/atom/electron/issues');
+        click () {
+          shell.openExternal('https://github.com/atom/electron/issues')
         }
       }]
-    }];
-    menu = Menu.buildFromTemplate(template);
-    mainWindow.setMenu(menu);
+    }]
+    menu = Menu.buildFromTemplate(template)
+    mainWindow.setMenu(menu)
   }
-});
+})
