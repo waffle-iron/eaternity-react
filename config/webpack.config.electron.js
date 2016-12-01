@@ -1,6 +1,7 @@
 /**
  * Build config for electron 'Main Process' file
  */
+
 import webpack from 'webpack'
 import validate from 'webpack-validator'
 import merge from 'webpack-merge'
@@ -14,7 +15,7 @@ export default validate(merge(baseConfig, {
   // 'main.js' in root
   output: {
     path: __dirname,
-    filename: './app/main.js'
+    filename: '../app/main.js'
   },
 
   plugins: [

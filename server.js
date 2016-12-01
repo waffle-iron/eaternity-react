@@ -11,7 +11,7 @@ import webpackDevMiddleware from 'webpack-dev-middleware'
 import webpackHotMiddleware from 'webpack-hot-middleware'
 import { spawn } from 'child_process'
 
-import config from './webpack/webpack.config.development'
+import config from './config/webpack.config.development'
 
 const argv = require('minimist')(process.argv.slice(2))
 

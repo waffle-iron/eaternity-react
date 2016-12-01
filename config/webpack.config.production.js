@@ -1,6 +1,7 @@
 /**
  * Build config for electron 'Renderer Process' file
  */
+
 import path from 'path'
 import webpack from 'webpack'
 import validate from 'webpack-validator'
@@ -18,7 +19,7 @@ const config = validate(merge(baseConfig, {
   ],
 
   output: {
-    path: path.join(__dirname, 'app/dist'),
+    path: path.join(__dirname, '../app/dist'),
     publicPath: '../dist/'
   },
 
@@ -32,6 +33,7 @@ const config = validate(merge(baseConfig, {
           'css-loader'
         )
       },
+
       // Pipe other styles through css modules and append to style.css
       {
         test: /^((?!\.global).)*\.css$/,
@@ -40,6 +42,7 @@ const config = validate(merge(baseConfig, {
           'css-loader?modules&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]'
         )
       },
+
       { test: /\.woff(\?v=\d+\.\d+\.\d+)?$/, loader: 'url?limit=10000&mimetype=application/font-woff' },
       { test: /\.woff2(\?v=\d+\.\d+\.\d+)?$/, loader: 'url?limit=10000&mimetype=application/font-woff' },
       { test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/, loader: 'url?limit=10000&mimetype=application/octet-stream' },
