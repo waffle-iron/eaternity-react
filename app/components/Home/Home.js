@@ -8,11 +8,12 @@ import styles from './Home.css'
 const Home = (props: Object) => {
   return (
     <div className={styles.container}>
-      <SearchBar />
+      <SearchBar actions={props.actions} />
       <NavGroup />
       <Table
         actions={props.actions}
         products={props.products}
+        searchInput={props.searchInput}
        />
     </div>
   )
@@ -20,7 +21,8 @@ const Home = (props: Object) => {
 
 Home.propTypes = {
   products: PropTypes.array.isRequired,
-  actions: PropTypes.object.isRequired
+  actions: PropTypes.object.isRequired,
+  searchInput: PropTypes.string.isRequired
 }
 
 export default Home

@@ -1,7 +1,7 @@
 /* @flow */
 import { combineReducers } from 'redux'
 import { routerReducer as routing } from 'react-router-redux'
-import data from './data/reducer'
+import data from './data/products/reducer'
 import view from './view/reducer'
 
 const rootReducer = combineReducers({

@@ -1,26 +1,11 @@
 /* @flow */
 import React from 'react'
-import * as dataActions from '../store/data/actions'
+import * as dataActions from '../store/data/products/actions'
 import * as viewActions from '../store/view/actions'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
+import { getVisibleProducts } from '../store/selectors/product'
 import Home from '../components/Home/Home'
-
-const filterVisibleProducts = (products, filter) => {
-  switch (filter) {
-    case 'SHOW_ALL':
-      return products
-    case 'SHOW_SUBSET':
-      return products.map(product => {
-        return {
-          Product: product.name,
-          Synonyms: product.synonyms,
-          Tags: product.tags,
-          'Co2-value': product['co2-value']
-        }
-      })
-  }
-}
 
 const HomeContainer = (props: Object) => {
   return (
@@ -30,14 +15,16 @@ const HomeContainer = (props: Object) => {
 
 const mapStateToProps = (state: Object) => ({
   dataDir: state.data.dataDir,
-  products: filterVisibleProducts(state.data.products, state.view.productFilter)
+  products: getVisibleProducts(state),
+  searchInput: state.view.searchInput
 })
 
 const mapDispatchToProps = dispatch => ({
   actions: bindActionCreators({
     fetchProducts: dataActions.fetchProducts,
     changeDataDir: dataActions.changeDataDir,
-    toggleProductVisibility: viewActions.toggleProductVisibility
+    toggleProductVisibility: viewActions.toggleProductVisibility,
+    updateSearchInput: viewActions.updateSearchInput
   }, dispatch)
 })
 
