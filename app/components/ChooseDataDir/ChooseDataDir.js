@@ -8,7 +8,6 @@ const ChooseDataDir = (props: Object) => {
   const handleChooseDir = () => {
     ipcRenderer.send('choose-data-dir')
     ipcRenderer.on('data-dir-choosen', (event, choosenDir) => {
-      console.log(choosenDir)
       if (choosenDir) {
         props.actions.changeDataDir(choosenDir)
         props.actions.fetchAllProducts()
