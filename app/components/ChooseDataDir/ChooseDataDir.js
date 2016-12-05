@@ -7,9 +7,12 @@ import styles from './ChooseDataDir.css'
 const ChooseDataDir = (props: Object) => {
   const handleChooseDir = () => {
     ipcRenderer.send('choose-data-dir')
-    ipcRenderer.on('data-dir-choosen', (event, dataDir) => {
-      props.actions.changeDataDir(dataDir[0])
-      props.actions.fetchProducts()
+    ipcRenderer.on('data-dir-choosen', (event, choosenDir) => {
+      console.log(choosenDir)
+      if (choosenDir) {
+        props.actions.changeDataDir(choosenDir)
+        props.actions.fetchAllProducts()
+      }
     })
   }
 

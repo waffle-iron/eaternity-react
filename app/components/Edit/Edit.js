@@ -1,14 +1,24 @@
-import React from 'react'
+import React, { PropTypes } from 'react'
 import { Button } from 'reactstrap'
 import { LinkContainer } from 'react-router-bootstrap'
 
-const Edit = () => {
+const Edit = (props) => {
+  console.log(props)
   return (
-    <LinkContainer
-      to={{pathname: '/'}} >
-      <Button>Home</Button>
-    </LinkContainer>
+    <div>
+      <h1>
+        Hellllllo
+      </h1>
+      <LinkContainer
+        to={{pathname: '/'}} >
+        <Button>Home</Button>
+      </LinkContainer>
+    </div>
   )
+}
+
+Edit.propTypes = {
+  params: PropTypes.object
 }
 
 export default Edit

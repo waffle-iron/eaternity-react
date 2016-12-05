@@ -21,7 +21,7 @@ const mapStateToProps = (state: Object) => ({
 
 const mapDispatchToProps = dispatch => ({
   actions: bindActionCreators({
-    fetchProducts: dataActions.fetchProducts,
+    fetchAllProducts: dataActions.fetchAllProducts,
     changeDataDir: dataActions.changeDataDir,
     toggleProductVisibility: viewActions.toggleProductVisibility,
     updateSearchInput: viewActions.updateSearchInput

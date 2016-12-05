@@ -15,23 +15,39 @@ mcmunder stuff starts here
 // it to allow promise, await/async syntax
 const storage = pify(jsonStorage)
 
-const loadProducts = async (dir) => {
-  const allFiles = fs.readdirSync(path.resolve(dir))
-  const rawData = allFiles
-    .filter(filename => (
-      path.extname(filename) === '.json'
-    ))
-    .map(filename => (
-      jsonfile.readFileSync(path.join(dir, filename))
-    ))
+const loadProducts = (dir) => {
+  return new Promise((resolve, reject) => {
+    const allFiles = fs.readdirSync(path.resolve(dir))
+    const rawData = allFiles
+      .filter(filename => (
+        path.extname(filename) === '.json'
+      ))
+      .map(filename => {
+        return jsonfile.readFileSync(path.join(dir, filename))
+      })
 
-  await storage.set('products', rawData)
+    storage.set('products', rawData)
+      .then(err => {
+        if (err) reject(err)
+
+        storage.get('products')
+          .then(prods => {
+            resolve(prods)
+          })
+          .catch(err => reject(err))
+      })
+  })
 }
 
 ipcMain.on('choose-data-dir', (event) => {
-  dialog.showOpenDialog({ properties: ['openDirectory'] }, (dataDir) => {
-    loadProducts(dataDir)
-    event.sender.send('data-dir-choosen', dataDir)
+  // dialog.showOpenDialog always returns an array of files/dirs!
+  dialog.showOpenDialog({ properties: ['openDirectory'] }, (dataDirs) => {
+    const choosenDir = dataDirs[0]
+    loadProducts(choosenDir)
+      .then(data => {
+        event.sender.send('data-dir-choosen', data)
+      })
+      .catch(err => console.error(err))
   })
 })
 
