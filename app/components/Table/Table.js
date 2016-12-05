@@ -3,13 +3,13 @@ import React, { PropTypes } from 'react'
 import { clipboard } from 'electron'
 import { Table, Tr, Td } from 'reactable'
 import { Button, ButtonGroup, Col, Container, Row } from 'reactstrap'
-import { LinkContainer } from 'react-router-bootstrap'
 import ChooseDataDir from '../ChooseDataDir/ChooseDataDir'
 import styles from './Table.css'
 
 const EdbTable = (props: Object) => {
   const handleEditClick = (id) => {
-    console.log(typeof id)
+    props.actions.selectProduct(id)
+    props.actions.changeLocation(`/edit/${id}`)
   }
 
   const handleCopyClick = (id) => {
@@ -33,16 +33,13 @@ const EdbTable = (props: Object) => {
                   onClick={() => handleCopyClick(product.Id)} >
                   Copy link
                 </Button>
-                <LinkContainer
-                  to={{pathname: `/edit/${product.Id}`}} >
-                  <Button
-                    outline
-                    color='info'
-                    size='sm'
-                    onClick={() => handleEditClick(product.Id)} >
-                    Edit
-                  </Button>
-                </LinkContainer>
+                <Button
+                  outline
+                  color='info'
+                  size='sm'
+                  onClick={() => handleEditClick(product.Id)} >
+                  Edit
+                </Button>
               </ButtonGroup>
             </Td>
           </Tr>

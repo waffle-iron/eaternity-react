@@ -15,6 +15,9 @@ mcmunder stuff starts here
 // it to allow promise, await/async syntax
 const storage = pify(jsonStorage)
 
+// set indentation for jsonfile
+jsonfile.spaces = 2
+
 const loadProducts = (dir) => {
   return new Promise((resolve, reject) => {
     const allFiles = fs.readdirSync(path.resolve(dir))
@@ -23,7 +26,10 @@ const loadProducts = (dir) => {
         path.extname(filename) === '.json'
       ))
       .map(filename => {
-        return jsonfile.readFileSync(path.join(dir, filename))
+        return {
+          filename,
+          ...jsonfile.readFileSync(path.join(dir, filename))
+        }
       })
 
     storage.set('products', rawData)
@@ -39,16 +45,58 @@ const loadProducts = (dir) => {
   })
 }
 
-ipcMain.on('choose-data-dir', (event) => {
+ipcMain.on('choose-data-dir', event => {
   // dialog.showOpenDialog always returns an array of files/dirs!
   dialog.showOpenDialog({ properties: ['openDirectory'] }, (dataDirs) => {
+    if (!dataDirs) return
     const choosenDir = dataDirs[0]
     loadProducts(choosenDir)
       .then(data => {
-        event.sender.send('data-dir-choosen', data)
+        event.sender.send('data-dir-choosen', choosenDir)
       })
       .catch(err => console.error(err))
   })
+})
+
+ipcMain.on('back-button-clicked', event => {
+  const boxOptions = {
+    type: 'warning',
+    buttons: ['Cancel', 'Go back to table view'],
+    title: 'Warning',
+    message: `Did you save your changes? Changes will be lost when you go back to the table view without saving!`
+  }
+  dialog.showMessageBox(boxOptions, userInput => {
+    if (userInput === 0) return
+    event.sender.send('back-box-verified')
+  })
+})
+
+ipcMain.on('save-button-clicked', (event, fileName) => {
+  const boxOptions = {
+    type: 'warning',
+    buttons: ['Cancel', 'Save'],
+    title: 'Warning',
+    message: `Clicking save will save changes to ${fileName}. ${fileName} will be overwritten if filename exists!`
+  }
+  dialog.showMessageBox(boxOptions, userInput => {
+    if (userInput === 0) return
+    event.sender.send('save-box-verified')
+  })
+})
+
+ipcMain.on('save-updated-product', (event, dataDir, id) => {
+  storage.get('products')
+    .then(allProducts => {
+      const updatedProduct = allProducts.filter(product => {
+        return product.id === id
+      })
+      const fileName = updatedProduct[0].filename
+      jsonfile.writeFileSync(
+        `${dataDir}/${fileName}`,
+        updatedProduct[0]
+      )
+    })
+    .catch(err => console.error(err))
 })
 
 /*

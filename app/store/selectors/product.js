@@ -3,8 +3,8 @@ Trying to make preselection/ filtering of products more effective... See https:/
 */
 import { createSelector } from 'reselect'
 
-const getVisibilityFilter = (state) => state.view.productFilter
-const getProducts = (state) => state.data.products
+const getVisibilityFilter = state => state.view.productFilter
+const getProducts = state => state.data.products
 
 export const getVisibleProducts = createSelector(
   [ getVisibilityFilter, getProducts ],
@@ -25,3 +25,5 @@ export const getVisibleProducts = createSelector(
     }
   }
 )
+
+export const getSelectedProduct = state => state.data.selectedProduct
