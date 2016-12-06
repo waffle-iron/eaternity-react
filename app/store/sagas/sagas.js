@@ -2,7 +2,9 @@ import { takeLatest } from 'redux-saga'
 import { call, fork, put, select } from 'redux-saga/effects'
 import { getSelectedProduct } from '../selectors/product'
 import productApi from '../../api/products'
-import * as actionTypes from '../data/products/action-types'
+import faoApi from '../../api/faos'
+
+import * as actionTypes from '../data/action-types'
 
 // worker sagas: fire on PRODUCT_FETCH_ALL_REQUESTED and SAVE_PRODUCT
 function * fetchAllProducts () {
@@ -11,6 +13,15 @@ function * fetchAllProducts () {
     yield put({type: actionTypes.PRODUCT_FETCH_ALL_SUCCEEDED, products})
   } catch (err) {
     yield put({type: actionTypes.PRODUCT_FETCH_ALL_FAILED, message: err.message})
+  }
+}
+
+function * fetchAllFAOs () {
+  try {
+    const faos = yield call(faoApi.fetchAllFAOs)
+    yield put({type: actionTypes.FAO_FETCH_ALL_SUCCEEDED, faos})
+  } catch (err) {
+    yield put({type: actionTypes.FAO_FETCH_ALL_FAILED, message: err.message})
   }
 }
 
@@ -32,6 +43,10 @@ function * fetchProductsSaga () {
   yield takeLatest(actionTypes.PRODUCT_FETCH_ALL_REQUESTED, fetchAllProducts)
 }
 
+function * fetchFAOsSaga () {
+  yield takeLatest(actionTypes.FAO_FETCH_ALL_REQUESTED, fetchAllFAOs)
+}
+
 function * saveProductSaga () {
   yield takeLatest(actionTypes.PRODUCT_SAVE_REQUESTED, saveProduct)
 }
@@ -39,6 +54,7 @@ function * saveProductSaga () {
 function * rootSaga () {
   yield [
     fork(fetchProductsSaga),
+    fork(fetchFAOsSaga),
     fork(saveProductSaga)
   ]
 }

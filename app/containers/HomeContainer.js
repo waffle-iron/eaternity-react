@@ -1,6 +1,6 @@
 /* @flow */
 import React from 'react'
-import * as dataActions from '../store/data/products/actions'
+import * as dataActions from '../store/data/actions'
 import * as viewActions from '../store/view/actions'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
@@ -14,18 +14,24 @@ const HomeContainer = (props: Object) => {
   )
 }
 
-const mapStateToProps = (state: Object) => ({
-  products: getVisibleProducts(state),
-  searchInput: state.view.searchInput
-})
+const mapStateToProps = (state: Object) => {
+  return {
+    products: getVisibleProducts(state),
+    faos: state.data.faos,
+    searchInput: state.view.searchInput,
+    visibleTable: state.view.visibleTable
+  }
+}
 
 const mapDispatchToProps = dispatch => ({
   actions: bindActionCreators({
     fetchAllProducts: dataActions.fetchAllProducts,
+    fetchAllFAOs: dataActions.fetchAllFAOs,
     changeDataDir: dataActions.changeDataDir,
     selectProduct: dataActions.selectProduct,
-    toggleProductVisibility: viewActions.toggleProductVisibility,
+    toggleTableVisibility: viewActions.toggleTableVisibility,
     updateSearchInput: viewActions.updateSearchInput,
+    clearSearchInput: viewActions.clearSearchInput,
     changeLocation: push
   }, dispatch)
 })

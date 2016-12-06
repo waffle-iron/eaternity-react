@@ -18,43 +18,49 @@ const storage = pify(jsonStorage)
 // set indentation for jsonfile
 jsonfile.spaces = 2
 
-const loadProducts = (dir) => {
-  return new Promise((resolve, reject) => {
-    const allFiles = fs.readdirSync(path.resolve(dir))
-    const rawData = allFiles
-      .filter(filename => (
-        path.extname(filename) === '.json'
-      ))
-      .map(filename => {
-        return {
-          filename,
-          ...jsonfile.readFileSync(path.join(dir, filename))
-        }
-      })
+const loadJsonFiles = (_dataDir, folder) => {
+  const fullPath = `${_dataDir}/${folder}`
+  const allFiles = fs.readdirSync(fullPath)
+  const jsonData = allFiles
+    .filter(filename => {
+      return path.extname(filename) === '.json' &&
+      !(filename === 'prod.schema.json')
+    })
+    .map(filename => {
+      return {
+        filename,
+        ...jsonfile.readFileSync(`${fullPath}/${filename}`)
+      }
+    })
 
-    storage.set('products', rawData)
-      .then(err => {
-        if (err) reject(err)
+  return jsonData
+}
 
-        storage.get('products')
-          .then(prods => {
-            resolve(prods)
-          })
-          .catch(err => reject(err))
-      })
-  })
+const loadFAOFiles = (_dataDir) => {
+  const fullPath = `${_dataDir}/fao-product-list.json`
+  return jsonfile.readFileSync(fullPath)
 }
 
 ipcMain.on('choose-data-dir', event => {
   // dialog.showOpenDialog always returns an array of files/dirs!
-  dialog.showOpenDialog({ properties: ['openDirectory'] }, (dataDirs) => {
+  dialog.showOpenDialog({ properties: ['openDirectory'] }, async dataDirs => {
     if (!dataDirs) return
+
     const choosenDir = dataDirs[0]
-    loadProducts(choosenDir)
-      .then(data => {
-        event.sender.send('data-dir-choosen', choosenDir)
-      })
-      .catch(err => console.error(err))
+
+    const products = loadJsonFiles(choosenDir, 'prods')
+    const nutrients = loadJsonFiles(choosenDir, 'nutrs')
+    const faos = loadFAOFiles(choosenDir)
+
+    try {
+      await storage.set('products', products)
+      await storage.set('nutrients', nutrients)
+      await storage.set('faos', faos)
+    } catch (err) {
+      console.error(err)
+    }
+
+    event.sender.send('data-dir-choosen', choosenDir)
   })
 })
 
@@ -65,8 +71,10 @@ ipcMain.on('back-button-clicked', event => {
     title: 'Warning',
     message: `Did you save your changes? Changes will be lost when you go back to the table view without saving!`
   }
+
   dialog.showMessageBox(boxOptions, userInput => {
     if (userInput === 0) return
+
     event.sender.send('back-box-verified')
   })
 })
@@ -76,10 +84,12 @@ ipcMain.on('save-button-clicked', (event, fileName) => {
     type: 'warning',
     buttons: ['Cancel', 'Save'],
     title: 'Warning',
-    message: `Clicking save will save changes to ${fileName}. ${fileName} will be overwritten if filename exists!`
+    message: `Clicking save will save changes to ${fileName}. File will be overwritten if it exists!`
   }
+
   dialog.showMessageBox(boxOptions, userInput => {
     if (userInput === 0) return
+
     event.sender.send('save-box-verified')
   })
 })
@@ -92,7 +102,7 @@ ipcMain.on('save-updated-product', (event, dataDir, id) => {
       })
       const fileName = updatedProduct[0].filename
       jsonfile.writeFileSync(
-        `${dataDir}/${fileName}`,
+        `${dataDir}/prods/${fileName}`,
         updatedProduct[0]
       )
     })

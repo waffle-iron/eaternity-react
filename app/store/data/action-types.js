@@ -1,4 +1,8 @@
-// namespacing action-types makes sense in big aps
+/*
+namespacing action-types makes sense in big aps
+*/
+
+// Applications/products
 export const PRODUCT_FETCH_ALL_REQUESTED = 'data.PRODUCT_FETCH_ALL_REQUESTED'
 export const PRODUCT_FETCH_ALL_SUCCEEDED = 'data.PRODUCT_FETCH_ALL_SUCCEEDED'
 export const PRODUCT_FETCH_ALL_FAILED = 'data.PRODUCT_FETCH_ALL_FAILED'
@@ -8,3 +12,8 @@ export const PRODUCT_SAVE_FAILED = 'data.PRODUCT_SAVE_FAILED'
 export const SELECT_PRODUCT = 'data.SELECT_PRODUCT'
 export const UPDATE_SELECTED_PRODUCT = 'data.UPDATE_SELECTED_PRODUCT'
 export const CHANGE_DATADIR = 'data.CHANGE_DATADIR'
+
+// FAO
+export const FAO_FETCH_ALL_REQUESTED = 'data.FAO_FETCH_ALL_REQUESTED'
+export const FAO_FETCH_ALL_SUCCEEDED = 'data.FAO_FETCH_ALL_SUCCEEDED'
+export const FAO_FETCH_ALL_FAILED = 'data.FAO_FETCH_ALL_FAILED'

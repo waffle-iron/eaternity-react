@@ -4,6 +4,7 @@ import * as actionTypes from './action-types'
 const initialState = {
   dataDir: '',
   products: [],
+  faos: [],
   selectedProduct: {},
   errorMessages: []
 }
@@ -41,6 +42,16 @@ const data = (state: Object = initialState, action: Object) => {
       })
 
     case actionTypes.PRODUCT_SAVE_FAILED:
+      return Object.assign({}, state, {
+        errorMessages: [...state.errorMessages, action.message]
+      })
+
+    case actionTypes.FAO_FETCH_ALL_SUCCEEDED:
+      return Object.assign({}, state, {
+        faos: action.faos
+      })
+
+    case actionTypes.FAO_FETCH_ALL_FAILED:
       return Object.assign({}, state, {
         errorMessages: [...state.errorMessages, action.message]
       })

@@ -1,19 +1,13 @@
 /* @flow */
 import React, { PropTypes } from 'react'
-import { clipboard } from 'electron'
 import { Table, Tr, Td } from 'reactable'
-import { Button, ButtonGroup, Col, Container, Row } from 'reactstrap'
-import ChooseDataDir from '../ChooseDataDir/ChooseDataDir'
-import styles from './Table.css'
+import { Button, Col, Container, Row } from 'reactstrap'
+import styles from './ProductTable.css'
 
-const EdbTable = (props: Object) => {
+const ProductTable = (props: Object) => {
   const handleEditClick = (id) => {
     props.actions.selectProduct(id)
     props.actions.changeLocation(`/edit/${id}`)
-  }
-
-  const handleCopyClick = (id) => {
-    clipboard.writeText(id.toString())
   }
 
   const renderTableRows = () => {
@@ -25,22 +19,13 @@ const EdbTable = (props: Object) => {
             <Td column='Tags' data={product.Tags} />
             <Td column='Co2-value' data={product['Co2-value']} />
             <Td column='Actions'>
-              <ButtonGroup>
-                <Button
-                  outline
-                  color='info'
-                  size='sm'
-                  onClick={() => handleCopyClick(product.Id)} >
-                  Copy link
-                </Button>
-                <Button
-                  outline
-                  color='info'
-                  size='sm'
-                  onClick={() => handleEditClick(product.Id)} >
-                  Edit
-                </Button>
-              </ButtonGroup>
+              <Button
+                outline
+                color='info'
+                size='sm'
+                onClick={() => handleEditClick(product.Id)} >
+                Edit
+              </Button>
             </Td>
           </Tr>
         )
@@ -50,7 +35,12 @@ const EdbTable = (props: Object) => {
 
   const renderView = () => {
     if (props.products.length === 0) {
-      return <ChooseDataDir actions={props.actions} />
+      return (
+        <div className={styles.message}>
+          <h3>Nothing here yet...</h3>
+          <p>Choose data dir above!</p>
+        </div>
+      )
     }
 
     return (
@@ -81,10 +71,10 @@ const EdbTable = (props: Object) => {
   )
 }
 
-EdbTable.propTypes = {
+ProductTable.propTypes = {
   products: PropTypes.array,
   actions: PropTypes.object.isRequired,
   searchInput: PropTypes.string.isRequired
 }
 
-export default EdbTable
+export default ProductTable

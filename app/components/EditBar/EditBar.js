@@ -8,6 +8,7 @@ const EditBar = (props) => {
   const handleBackClick = () => {
     ipcRenderer.send('back-button-clicked')
     ipcRenderer.on('back-box-verified', event => {
+      props.actions.clearSearchInput()
       props.actions.changeLocation('/')
     })
   }

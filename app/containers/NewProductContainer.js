@@ -5,11 +5,11 @@ import * as viewActions from '../store/view/actions'
 import { bindActionCreators } from 'redux'
 import { push } from 'react-router-redux'
 import { connect } from 'react-redux'
-import Edit from '../components/Edit/Edit'
+import NewProduct from '../components/NewProduct/NewProduct'
 
-const EditContainer = (props: Object) => {
+const NewProductContainer = (props: Object) => {
   return (
-    <Edit {...props} />
+    <NewProduct {...props} />
   )
 }
 
@@ -30,4 +30,4 @@ const mapDispatchToProps = dispatch => ({
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(EditContainer)
+)(NewProductContainer)
