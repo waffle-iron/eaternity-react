@@ -16,6 +16,8 @@ Start in dev mode:
 npm run dev
 ```
 
+__Choose Eaternity-Database _data folder as data directory for now or things will go 💩 __
+
 Production mode is broken right now, no clue why!
 
 Project is based on [electron-react-boilerplate](https://github.com/chentsulin/electron-react-boilerplate). See instructions there for running, packaging, etc...
