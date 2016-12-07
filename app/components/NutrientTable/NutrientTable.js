@@ -4,26 +4,26 @@ import { clipboard } from 'electron'
 import { Table, Tr, Td } from 'reactable'
 import { Button, Col, Container, Row } from 'reactstrap'
 
-const FaoTable = (props: Object) => {
+const NutrientTable = (props: Object) => {
   const handleCopyClick = (id) => {
     clipboard.writeText(id.toString())
   }
 
   const renderTableRows = () => {
     return (
-      props.faos.map(fao => {
+      props.nutrients.map(nutrient => {
         return (
-          <Tr key={fao['fao-code']} >
-            <Td column='Code' data={fao['fao-code']} />
-            <Td column='Name' data={fao['fao-name']} />
-            <Td column='Definition' data={fao.definition} />
+          <Tr key={nutrient.id} >
+            <Td column='Id' data={nutrient.id} />
+            <Td column='Name' data={nutrient.name} />
+            <Td column='Country' data={nutrient.country} />
             <Td column='Actions'>
               <Button
                 outline
                 color='info'
                 size='sm'
-                onClick={() => handleCopyClick(fao['fao-code'])} >
-                Copy FAO code
+                onClick={() => handleCopyClick(nutrient.id)} >
+                Copy ID
               </Button>
             </Td>
           </Tr>
@@ -33,7 +33,7 @@ const FaoTable = (props: Object) => {
   }
 
   const renderView = () => {
-    if (props.faos.length === 0) {
+    if (props.nutrients.length === 0) {
       return (
         <div className='table-message'>
           <h3>Nothing here yet...</h3>
@@ -45,11 +45,11 @@ const FaoTable = (props: Object) => {
     return (
       <Table
         className='table'
-        columns={['Code', 'Name', 'Definition', 'Actions']}
-        itemsPerPage={5}
+        columns={['Id', 'Name', 'Country', 'Actions']}
+        itemsPerPage={8}
         pageButtonLimit={5}
-        filterable={['Code', 'Name', 'Definition']}
-        sortable={['Code', 'Name', 'Definition']}
+        filterable={['Id', 'Name', 'Country']}
+        sortable={['Id', 'Name', 'Country']}
         filterBy={props.searchInput}
         hideFilterInput >
         {renderTableRows()}
@@ -70,9 +70,9 @@ const FaoTable = (props: Object) => {
   )
 }
 
-FaoTable.propTypes = {
-  faos: PropTypes.array,
+NutrientTable.propTypes = {
+  nutrients: PropTypes.array,
   searchInput: PropTypes.string.isRequired
 }
 
-export default FaoTable
+export default NutrientTable

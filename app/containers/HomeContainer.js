@@ -18,6 +18,7 @@ const mapStateToProps = (state: Object) => {
   return {
     products: getVisibleProducts(state),
     faos: state.data.faos,
+    nutrients: state.data.nutrients,
     searchInput: state.view.searchInput,
     visibleTable: state.view.visibleTable
   }
@@ -27,6 +28,7 @@ const mapDispatchToProps = dispatch => ({
   actions: bindActionCreators({
     fetchAllProducts: dataActions.fetchAllProducts,
     fetchAllFAOs: dataActions.fetchAllFAOs,
+    fetchAllNutrients: dataActions.fetchAllNutrients,
     changeDataDir: dataActions.changeDataDir,
     selectProduct: dataActions.selectProduct,
     toggleTableVisibility: viewActions.toggleTableVisibility,

@@ -2,7 +2,6 @@
 import React, { PropTypes } from 'react'
 import { Table, Tr, Td } from 'reactable'
 import { Button, Col, Container, Row } from 'reactstrap'
-import styles from './ProductTable.css'
 
 const ProductTable = (props: Object) => {
   const handleEditClick = (id) => {
@@ -36,7 +35,7 @@ const ProductTable = (props: Object) => {
   const renderView = () => {
     if (props.products.length === 0) {
       return (
-        <div className={styles.message}>
+        <div className='table-message'>
           <h3>Nothing here yet...</h3>
           <p>Choose data dir above!</p>
         </div>
@@ -59,7 +58,7 @@ const ProductTable = (props: Object) => {
   }
 
   return (
-    <div className={styles.container}>
+    <div className='table-container'>
       <Container>
         <Row>
           <Col sm={{ size: '10', offset: 1 }}>

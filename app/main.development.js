@@ -41,9 +41,17 @@ const loadFAOFiles = (_dataDir) => {
   return jsonfile.readFileSync(fullPath)
 }
 
+const setToStorage = async (name, jsonObj) => {
+  try {
+    await storage.set(name, jsonObj)
+  } catch (err) {
+    console.error(err)
+  }
+}
+
 ipcMain.on('choose-data-dir', event => {
   // dialog.showOpenDialog always returns an array of files/dirs!
-  dialog.showOpenDialog({ properties: ['openDirectory'] }, async dataDirs => {
+  dialog.showOpenDialog({ properties: ['openDirectory'] }, dataDirs => {
     if (!dataDirs) return
 
     const choosenDir = dataDirs[0]
@@ -51,16 +59,15 @@ ipcMain.on('choose-data-dir', event => {
     const products = loadJsonFiles(choosenDir, 'prods')
     const nutrients = loadJsonFiles(choosenDir, 'nutrs')
     const faos = loadFAOFiles(choosenDir)
+    const allData = {products, faos, nutrients}
 
-    try {
-      await storage.set('products', products)
-      await storage.set('nutrients', nutrients)
-      await storage.set('faos', faos)
-    } catch (err) {
-      console.error(err)
-    }
+    // Why are those still Promises??? Read up on async/await
 
-    event.sender.send('data-dir-choosen', choosenDir)
+    Promise.all(Object.keys(allData).map(key => {
+      return setToStorage(key, allData[key])
+    }))
+      .then(() => event.sender.send('data-dir-choosen', choosenDir))
+      .catch(err => console.error(err))
   })
 })
 

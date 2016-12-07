@@ -5,6 +5,7 @@ const initialState = {
   dataDir: '',
   products: [],
   faos: [],
+  nutrients: [],
   selectedProduct: {},
   errorMessages: []
 }
@@ -52,6 +53,16 @@ const data = (state: Object = initialState, action: Object) => {
       })
 
     case actionTypes.FAO_FETCH_ALL_FAILED:
+      return Object.assign({}, state, {
+        errorMessages: [...state.errorMessages, action.message]
+      })
+
+    case actionTypes.NUTRIENT_FETCH_ALL_SUCCEEDED:
+      return Object.assign({}, state, {
+        nutrients: action.nutrients
+      })
+
+    case actionTypes.NUTRIENT_FETCH_ALL_FAILED:
       return Object.assign({}, state, {
         errorMessages: [...state.errorMessages, action.message]
       })

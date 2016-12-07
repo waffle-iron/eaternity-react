@@ -28,6 +28,7 @@ class SearchBar extends Component {
         this.props.actions.changeDataDir(choosenDir)
         this.props.actions.fetchAllProducts()
         this.props.actions.fetchAllFAOs()
+        this.props.actions.fetchAllNutrients()
       }
     })
   }
