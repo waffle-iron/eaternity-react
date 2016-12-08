@@ -1,3 +1,4 @@
+[![Stories in Ready](https://badge.waffle.io/mcmunder/eaternity-react.png?label=ready&title=Ready)](https://waffle.io/mcmunder/eaternity-react)
 # eaternity-react
 
 [![Join the chat at https://gitter.im/mcmunder/eaternity-react](https://badges.gitter.im/mcmunder/eaternity-react.svg)](https://gitter.im/mcmunder/eaternity-react?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
