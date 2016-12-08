@@ -17,7 +17,7 @@ Start in dev mode:
 npm run dev
 ```
 
-__Use the _data folder of the Eaternity-Database edb-update branch as the data directory for now or things will go 💩 __
+__Use the _data folder of the Eaternity-Database edb-update branch as the data directory for now or things will go 💩__
 
 Production mode is broken right now, no clue why!
 
