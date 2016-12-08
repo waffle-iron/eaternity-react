@@ -19,6 +19,7 @@ const mapStateToProps = (state: Object) => {
     products: getVisibleProducts(state),
     faos: state.data.faos,
     nutrients: state.data.nutrients,
+    editedProduct: state.data.editedProduct,
     searchInput: state.view.searchInput,
     visibleTable: state.view.visibleTable
   }
@@ -31,6 +32,7 @@ const mapDispatchToProps = dispatch => ({
     fetchAllNutrients: dataActions.fetchAllNutrients,
     changeDataDir: dataActions.changeDataDir,
     selectProduct: dataActions.selectProduct,
+    setEditedProductToNew: dataActions.setEditedProductToNew,
     toggleTableVisibility: viewActions.toggleTableVisibility,
     updateSearchInput: viewActions.updateSearchInput,
     clearSearchInput: viewActions.clearSearchInput,

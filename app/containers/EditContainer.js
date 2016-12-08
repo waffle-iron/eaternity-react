@@ -15,7 +15,7 @@ const EditContainer = (props: Object) => {
 
 const mapStateToProps = (state: Object) => ({
   dataDir: state.data.dataDir,
-  selectedProduct: state.data.selectedProduct
+  editedProduct: state.data.editedProduct
 })
 
 const mapDispatchToProps = dispatch => ({

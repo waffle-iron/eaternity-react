@@ -1,25 +1,61 @@
 /* @flow */
-import React, { PropTypes } from 'react'
+import React, { Component, PropTypes } from 'react'
 import { ipcRenderer } from 'electron'
-import { Button, Card, CardBlock, CardTitle, CardSubtitle, Col, Input, Form, FormGroup, Label } from 'reactstrap'
+import { Button, Card, CardBlock, CardTitle, CardSubtitle, Col, Input, Form, FormGroup, Label, Popover, PopoverTitle, PopoverContent } from 'reactstrap'
 import EditBar from '../EditBar/EditBar'
 import styles from './Edit.css'
 
-const Edit = (props: Object) => {
-  const handleSaveClick = () => {
-    ipcRenderer.send('save-button-clicked', props.selectedProduct.filename)
-    ipcRenderer.on('save-box-verified', event => {
-      props.actions.saveProduct()
-      ipcRenderer.send('save-updated-product', props.dataDir, props.selectedProduct.id)
+class Edit extends Component {
+  static propTypes = {
+    dataDir: PropTypes.string.isRequired,
+    editedProduct: PropTypes.object.isRequired,
+    actions: PropTypes.object.isRequired
+  }
+
+  state = {
+    popoverOpen: false,
+    fieldname: ''
+  }
+
+  togglePopOver = () => {
+    this.setState({
+      popoverOpen: !this.state.popoverOpen
     })
   }
 
-  const handleInputChange = (e) => {
-    props.actions.updateSelectedProduct(e.target.id, e.target.value)
+  handleSaveClick = () => {
+    ipcRenderer.send('save-button-clicked', this.props.editedProduct.filename)
+    ipcRenderer.on('save-box-verified', event => {
+      this.props.actions.saveProduct()
+      ipcRenderer.send('save-updated-product', this.props.dataDir, this.props.editedProduct.id)
+    })
   }
 
-  const renderEdit = () => {
-    const inputs = Object.keys(props.selectedProduct).map(key => {
+  handleAddFieldClick = () => {
+    this.togglePopOver()
+  }
+
+  handleInputChange = (e: Object) => {
+    this.props.actions.updateSelectedProduct(e.target.id, e.target.value)
+  }
+
+  handleFieldnameInput = (e: Object) => {
+    this.setState({
+      fieldname: e.target.value
+    })
+  }
+
+  handleCreateFieldClick = () => {
+    const fieldname = this.state.fieldname
+    this.props.actions.updateSelectedProduct(fieldname, '')
+    this.togglePopOver()
+    this.setState({
+      fieldname: ''
+    })
+  }
+
+  renderEdit = () => {
+    const inputs = Object.keys(this.props.editedProduct).map(key => {
       return (
         <FormGroup key={key} row>
           <Label for={key} sm={4}>{key}</Label>
@@ -27,8 +63,8 @@ const Edit = (props: Object) => {
             <Input
               type='text'
               id={key}
-              onKeyUp={(e) => handleInputChange(e)}
-              placeholder={props.selectedProduct[key]} />
+              onKeyUp={(e) => this.handleInputChange(e)}
+              placeholder={this.props.editedProduct[key]} />
           </Col>
         </FormGroup>
       )
@@ -38,8 +74,8 @@ const Edit = (props: Object) => {
       <div className={styles.container}>
         <Card>
           <CardBlock>
-            <CardTitle>{props.selectedProduct.name}</CardTitle>
-            <CardSubtitle>{props.selectedProduct.filename}</CardSubtitle>
+            <CardTitle>{this.props.editedProduct.name}</CardTitle>
+            <CardSubtitle>{this.props.editedProduct.filename}</CardSubtitle>
           </CardBlock>
           <CardBlock>
             <Form>
@@ -47,30 +83,63 @@ const Edit = (props: Object) => {
             </Form>
           </CardBlock>
           <CardBlock>
-            <Button
-              onClick={() => handleSaveClick()}
-              outline
-              color='success'
-              block >
-              Save changes
-            </Button>
+            <div className={styles.editBtnGroup}>
+              <Col sm={2}>
+                <Button
+                  onClick={() => this.handleAddFieldClick()}
+                  outline
+                  id='addField'
+                  color='warning'
+                  block >
+                  Add field
+                </Button>
+                <Popover
+                  placement='top'
+                  isOpen={this.state.popoverOpen}
+                  target='addField'
+                  toggle={this.togglePopOver}>
+                  <PopoverTitle>
+                    Enter fieldname
+                  </PopoverTitle>
+                  <PopoverContent>
+                    <Input
+                      type='text'
+                      onKeyUp={(e) => this.handleFieldnameInput(e)}
+                      placeholder='fieldname' />
+                  </PopoverContent>
+                  <PopoverContent className={styles.popoverBtn}>
+                    <Button
+                      onClick={() => this.handleCreateFieldClick()}
+                      size='sm'
+                      color='success'>
+                      Create field
+                    </Button>
+                  </PopoverContent>
+                </Popover>
+              </Col>
+              <Col sm={3}>
+                <Button
+                  onClick={() => this.handleSaveClick()}
+                  outline
+                  color='success'
+                  block >
+                  Save changes
+                </Button>
+              </Col>
+            </div>
           </CardBlock>
         </Card>
       </div>
     )
   }
-
-  return (
-    <div>
-      <EditBar actions={props.actions} />
-      {renderEdit()}
-    </div>
-  )
-}
-
-Edit.propTypes = {
-  selectedProduct: PropTypes.object.isRequired,
-  actions: PropTypes.object.isRequired
+  render () {
+    return (
+      <div>
+        <EditBar actions={this.props.actions} />
+        {this.renderEdit()}
+      </div>
+    )
+  }
 }
 
 export default Edit

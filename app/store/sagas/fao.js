@@ -1,11 +1,11 @@
 import { takeLatest } from 'redux-saga'
 import { call, put } from 'redux-saga/effects'
-import faoApi from '../../api/faos'
+import edbApi from '../../api/edb'
 import * as actionTypes from '../data/action-types'
 
 function * fetchAllFAOs () {
   try {
-    const faos = yield call(faoApi.fetchAllFAOs)
+    const faos = yield call(edbApi.fetchAllFAOs)
     yield put({type: actionTypes.FAO_FETCH_ALL_SUCCEEDED, faos})
   } catch (err) {
     yield put({type: actionTypes.FAO_FETCH_ALL_FAILED, message: err.message})

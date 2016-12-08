@@ -34,6 +34,7 @@ const Home = (props: Object) => {
   return (
     <div className={styles.container}>
       <SearchBar
+        editedProduct={props.editedProduct}
         actions={props.actions} />
       <NavGroup
         actions={props.actions} />
@@ -44,10 +45,11 @@ const Home = (props: Object) => {
 
 Home.propTypes = {
   products: PropTypes.array.isRequired,
+  editedProduct: PropTypes.object.isRequired,
   faos: PropTypes.array.isRequired,
   nutrients: PropTypes.array.isRequired,
   actions: PropTypes.object.isRequired,
-  visibleTable: PropTypes.string.isRequired,
+  visibleTable: PropTypes.oneOf(['products', 'fao', 'nutrition']).isRequired,
   searchInput: PropTypes.string.isRequired
 }
 

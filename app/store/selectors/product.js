@@ -27,3 +27,11 @@ export const getVisibleProducts = createSelector(
 )
 
 export const getSelectedProduct = state => state.data.selectedProduct
+
+// Get the highest id of all products so new products can get maxId + 1
+// export const maxIdSelector = createSelector(
+//   getProducts,
+//   products => products.reduce((acc, product) => {
+//     return (acc >= product.id) ? acc : product.id
+//   }, 0)
+// )

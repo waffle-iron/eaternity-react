@@ -9,7 +9,8 @@ import styles from './SearchBar.css'
 
 class SearchBar extends Component {
   static propTypes = {
-    actions: PropTypes.object.isRequired
+    actions: PropTypes.object.isRequired,
+    editedProduct: PropTypes.object.isRequired
   }
 
   state = {
@@ -55,7 +56,8 @@ class SearchBar extends Component {
   }
 
   handlePlusClick = () => {
-    this.props.actions.changeLocation('/new-product')
+    this.props.actions.setEditedProductToNew()
+    this.props.actions.changeLocation(`/edit/${this.props.editedProduct.id}`)
   }
 
   render () {
@@ -125,10 +127,6 @@ class SearchBar extends Component {
       </div>
     )
   }
-}
-
-SearchBar.propTypes = {
-  actions: PropTypes.object.isRequired
 }
 
 export default SearchBar

@@ -34,6 +34,12 @@ export const saveProduct = () => {
   }
 }
 
+export const setEditedProductToNew = () => {
+  return {
+    type: actions.SET_EDITED_PRODUCT_TO_NEW
+  }
+}
+
 // FAO
 export const fetchAllFAOs = () => {
   return {

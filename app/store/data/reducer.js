@@ -6,7 +6,7 @@ const initialState = {
   products: [],
   faos: [],
   nutrients: [],
-  selectedProduct: {},
+  editedProduct: {},
   errorMessages: []
 }
 
@@ -31,15 +31,43 @@ const data = (state: Object = initialState, action: Object) => {
         return product.id === action.id
       })
       return Object.assign({}, state, {
-        selectedProduct: state.products[indexOfSelectedProduct]
+        editedProduct: state.products[indexOfSelectedProduct]
+      })
+
+    case actionTypes.SET_EDITED_PRODUCT_TO_NEW:
+      const maxId = state.products.reduce((acc, product) => {
+        return (acc >= product.id) ? acc : product.id
+      }, 0)
+      const id = maxId + 1
+      const name = 'newproduct'
+      return Object.assign({}, state, {
+        editedProduct: {
+          name,
+          id,
+          filename: `${id}-${name}-prod.json`
+        }
       })
 
     case actionTypes.UPDATE_SELECTED_PRODUCT:
-      const updatedProduct = Object.assign({}, state.selectedProduct, {
-        [action.field]: action.value
-      })
+      let updatedProduct = {}
+      if (action.field === 'name') {
+        const splitFilename = state.editedProduct.filename.split('-')
+        const filename = [
+          splitFilename[0],
+          action.value,
+          splitFilename[2]
+        ].join('-')
+        updatedProduct = Object.assign({}, state.editedProduct, {
+          name: action.value,
+          filename
+        })
+      } else {
+        updatedProduct = Object.assign({}, state.editedProduct, {
+          [action.field]: action.value
+        })
+      }
       return Object.assign({}, state, {
-        selectedProduct: updatedProduct
+        editedProduct: updatedProduct
       })
 
     case actionTypes.PRODUCT_SAVE_FAILED:
