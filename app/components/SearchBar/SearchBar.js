@@ -1,25 +1,20 @@
 import React, { Component, PropTypes } from 'react'
 import { ipcRenderer } from 'electron'
-import { Col, Container, Input, InputGroup, InputGroupAddon, Nav, Navbar, NavItem, Row, Tooltip } from 'reactstrap'
+import { Col, Container, Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Input, InputGroup, InputGroupAddon, Nav, Navbar, NavItem, Row } from 'reactstrap'
+import menu from './menu.png'
 import logo from './logo.png'
 import searchIcon from './search.png'
-import addIcon from './plus.png'
-import folderIcon from './folder.png'
 import styles from './SearchBar.css'
 
 class SearchBar extends Component {
   static propTypes = {
     actions: PropTypes.object.isRequired,
-    editedProduct: PropTypes.object.isRequired
+    editedProduct: PropTypes.object.isRequired,
+    dataDir: PropTypes.string.isRequired
   }
 
   state = {
-    addTooltip: {
-      open: false
-    },
-    chooseTooltip: {
-      open: false
-    }
+    dropdownOpen: false
   }
 
   handleChooseDir = () => {
@@ -34,19 +29,9 @@ class SearchBar extends Component {
     })
   }
 
-  toggleAddToolTip = () => {
+  toggleDropdown = () => {
     this.setState({
-      addTooltip: {
-        open: !this.state.addTooltip.open
-      }
-    })
-  }
-
-  toggleDirToolTip = () => {
-    this.setState({
-      chooseTooltip: {
-        open: !this.state.chooseTooltip.open
-      }
+      dropdownOpen: !this.state.dropdownOpen
     })
   }
 
@@ -90,34 +75,23 @@ class SearchBar extends Component {
               <Col sm='2'>
                 <Nav navbar>
                   <NavItem>
-                    <img
-                      onClick={() => this.handlePlusClick()}
-                      className={styles.plus}
-                      color='secondary'
-                      id={'Tooltip-addFile'}
-                      src={addIcon} alt='searchIcon' />
-                    <Tooltip
-                      placement={'left'}
-                      isOpen={this.state.addTooltip.open}
-                      target={'Tooltip-addFile'}
-                      toggle={() => this.toggleAddToolTip()}>
-                      Add a new product
-                    </Tooltip>
-                  </NavItem>
-                  <NavItem>
-                    <img
-                      onClick={() => this.handleChooseDir()}
-                      className={styles.folder}
-                      color='secondary'
-                      id={'Tooltip-addDataDir'}
-                      src={folderIcon} alt='searchIcon' />
-                    <Tooltip
-                      placement={'bottom'}
-                      isOpen={this.state.chooseTooltip.open}
-                      target={'Tooltip-addDataDir'}
-                      toggle={() => this.toggleDirToolTip()}>
-                      Choose data directory
-                    </Tooltip>
+                    <Dropdown
+                      isOpen={this.state.dropdownOpen} toggle={this.toggleDropdown}>
+                      <DropdownToggle>
+                        <img className={styles.menu} src={menu} alt='menuIcon' />
+                      </DropdownToggle>
+                      <DropdownMenu right>
+                        <DropdownItem
+                          onClick={() => this.handleChooseDir()}>
+                          Choose data directory
+                        </DropdownItem>
+                        <DropdownItem
+                          onClick={() => this.handlePlusClick()}
+                          disabled={!this.props.dataDir}>
+                          Add new product
+                        </DropdownItem>
+                      </DropdownMenu>
+                    </Dropdown>
                   </NavItem>
                 </Nav>
               </Col>

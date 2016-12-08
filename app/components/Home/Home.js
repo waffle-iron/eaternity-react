@@ -34,6 +34,7 @@ const Home = (props: Object) => {
   return (
     <div className={styles.container}>
       <SearchBar
+        dataDir={props.dataDir}
         editedProduct={props.editedProduct}
         actions={props.actions} />
       <NavGroup
@@ -46,6 +47,7 @@ const Home = (props: Object) => {
 Home.propTypes = {
   products: PropTypes.array.isRequired,
   editedProduct: PropTypes.object.isRequired,
+  dataDir: PropTypes.string.isRequired,
   faos: PropTypes.array.isRequired,
   nutrients: PropTypes.array.isRequired,
   actions: PropTypes.object.isRequired,

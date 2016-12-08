@@ -19,6 +19,7 @@ const mapStateToProps = (state: Object) => {
     products: getVisibleProducts(state),
     faos: state.data.faos,
     nutrients: state.data.nutrients,
+    dataDir: state.data.dataDir,
     editedProduct: state.data.editedProduct,
     searchInput: state.view.searchInput,
     visibleTable: state.view.visibleTable
